@@ -1,7 +1,9 @@
-name: Build
+name: Build wheels
 
 on:
   push:
+    branches: [ develop/main ]
+  pull_request:
     branches: [ develop/main ]
 
 jobs:
@@ -10,7 +12,7 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        os: ["macos-11", ubuntu-20.04, "windows-latest"]
+        os: ["macos-12", "ubuntu-20.04", "windows-2022"]
 
     steps:
       - uses: actions/checkout@v4
@@ -25,5 +27,6 @@ jobs:
         uses: pypa/cibuildwheel@v2.11.2
 
       - uses: actions/upload-artifact@v4
+        if: github.event_name != 'pull_request'
         with:
           path: ./wheelhouse/*.whl
