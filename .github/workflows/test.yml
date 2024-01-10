@@ -14,7 +14,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: [ "ubuntu-20.04", "macOS-11", "windows-2022" ]
+        os: [ "ubuntu-20.04", "macOS-11", "windows-latest" ]
         python-version: ["3.10"]
         dot-net-version: [ "7.0.100" ]
     env:
@@ -49,7 +49,7 @@ jobs:
         uses: microsoft/setup-msbuild@v1.3.1
 
       - name: Create Build Environment
-        run: cmake -E make_directory ${{runner.workspace}}/build
+        run: cmake -E make_directory "${{runner.workspace}}/build"
 
       - name: Configure & Build CMake
         working-directory: ${{runner.workspace}}/build
@@ -70,11 +70,11 @@ jobs:
           python setup.py build
           python setup.py install
 
-      - name: Run C++ unit tests
+      - name: Run C++ unit tests [Unix]
         if: runner.os != 'Windows'
         working-directory: ${{runner.workspace}}/build
         run: ./unit_tests --out test.log -s --use-colour yes
-      - name: Run C++ unit tests
+      - name: Run C++ unit tests [Windows]
         if: runner.os == 'Windows'
         working-directory: ${{runner.workspace}}/build/Release
         run: |

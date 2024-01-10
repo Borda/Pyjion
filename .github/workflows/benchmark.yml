@@ -12,7 +12,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: ["ubuntu-20.04", "MacOS-11", "Windows-2022"]
+        os: ["ubuntu-20.04", "MacOS-11", "Windows-latest"]
         python-version: ["3.10"]
         dot-net-version: [ "7.0.100" ]
     defaults:
