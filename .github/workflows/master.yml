@@ -8,7 +8,7 @@ on:
 
 
 jobs:
-  build-linux:
+  build-test:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
@@ -49,21 +49,18 @@ jobs:
       - name: Create Build Environment
         run: cmake -E make_directory ${{runner.workspace}}/build
 
-      - name: Configure CMake
+      - name: Configure & Build CMake
         working-directory: ${{runner.workspace}}/build
-        run: cmake $GITHUB_WORKSPACE -DCMAKE_BUILD_TYPE=$BUILD_TYPE -DBUILD_TESTS=ON
+        run: |
+          cmake $GITHUB_WORKSPACE -DCMAKE_BUILD_TYPE=$BUILD_TYPE -DBUILD_TESTS=ON
+          cmake --build . --config $BUILD_TYPE
 
-      - name: Build
-        working-directory: ${{runner.workspace}}/build
-        run: cmake --build . --config $BUILD_TYPE
-
-      - name: Build & Install Python Package
+      - name: Build & Install Python Package [Unix]
         if: runner.os != 'Windows'
         run: |
           python -m pip install --upgrade pip
           pip install .
-
-      - name: Build & Install Python Package
+      - name: Build & Install Python Package [Windows]
         # todo: not sure why this is different then Unix
         if: runner.os == 'Windows'
         run: |
